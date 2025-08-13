@@ -6,4 +6,20 @@ class NotFoundError extends Error {
   }
 }
 
-module.exports = { NotFoundError };
+class ValidationError extends Error {
+  constructor(message = "Validation failed") {
+    super(message);
+    this.name = "ValidationError";
+    this.statusCode = 400;
+  }
+}
+
+class InternalSeverError extends Error {
+  constructor(message = "Internal server error") {
+    super(message);
+    this.name = "InternalSeverError";
+    this.statusCode = 500;
+  }
+}
+
+module.exports = { NotFoundError, ValidationError, InternalSeverError };
