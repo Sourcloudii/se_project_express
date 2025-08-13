@@ -32,7 +32,8 @@ const deleteClothingItem = (req, res) => {
     .catch((err) => {
       if (err instanceof NotFoundError) {
         return res.status(err.statusCode).send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid user ID" });
       }
       return res.status(500).send({ message: err.message });

@@ -1,7 +1,6 @@
 const clothingItems = require("../models/clothingItem");
 const { NotFoundError } = require("../utils/errors");
 
-//Like clotihng item
 module.exports.likeItem = (req, res) => {
   clothingItems
     .findByIdAndUpdate(
@@ -16,14 +15,14 @@ module.exports.likeItem = (req, res) => {
     .catch((err) => {
       if (err instanceof NotFoundError) {
         return res.status(err.statusCode).send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid user ID" });
       }
       return res.status(500).send({ message: err.message });
     });
 };
 
-//unlike clothing item
 module.exports.dislikeItem = (req, res) => {
   clothingItems
     .findByIdAndUpdate(
@@ -38,7 +37,8 @@ module.exports.dislikeItem = (req, res) => {
     .catch((err) => {
       if (err instanceof NotFoundError) {
         return res.status(err.statusCode).send({ message: err.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid user ID" });
       }
       return res.status(500).send({ message: err.message });
