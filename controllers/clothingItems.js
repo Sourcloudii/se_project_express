@@ -1,14 +1,17 @@
 const ClothingItem = require("../models/clothingItem");
-const { NotFoundError } = require("../utils/errors");
+const {
+  NotFoundError,
+  ValidationError,
+  InternalSeverError,
+} = require("../utils/errors");
 
-const getClothingItem = (req, res) => {
+module.exports.getClothingItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => next(new InternalSeverError("Internal server error")));
 };
 
-
-const createClothingItem = (req, res) => {
+module.exports.createClothingItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
@@ -17,13 +20,13 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return next(new ValidationError("Validaiton failed"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };
 
-const deleteClothingItem = (req, res) => {
+module.exports.deleteClothingItem = (req, res, next) => {
   ClothingItem.findByIdAndDelete(req.params.itemId)
     .orFail(() => {
       throw new NotFoundError("Item ID not found");
@@ -34,10 +37,8 @@ const deleteClothingItem = (req, res) => {
         return res.status(err.statusCode).send({ message: err.message });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid user ID" });
+        return next(new ValidationError("Invalid user ID format"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };
-
-module.exports = { createClothingItem, getClothingItem, deleteClothingItem };

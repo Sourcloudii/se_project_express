@@ -22,6 +22,10 @@ app.use((req, res, next) => {
 });
 app.use("/", mainRouter);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.statusCode || 500).send({ message: err.message });
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

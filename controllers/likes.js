@@ -1,7 +1,11 @@
 const clothingItems = require("../models/clothingItem");
-const { NotFoundError } = require("../utils/errors");
+const {
+  NotFoundError,
+  ValidationError,
+  InternalSeverError,
+} = require("../utils/errors");
 
-module.exports.likeItem = (req, res) => {
+module.exports.likeItem = (req, res, next) => {
   clothingItems
     .findByIdAndUpdate(
       req.params.itemId,
@@ -17,13 +21,13 @@ module.exports.likeItem = (req, res) => {
         return res.status(err.statusCode).send({ message: err.message });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid user ID" });
+        return next(new ValidationError("Invalid user ID format"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };
 
-module.exports.dislikeItem = (req, res) => {
+module.exports.dislikeItem = (req, res, next) => {
   clothingItems
     .findByIdAndUpdate(
       req.params.itemId,
@@ -39,8 +43,8 @@ module.exports.dislikeItem = (req, res) => {
         return res.status(err.statusCode).send({ message: err.message });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid user ID" });
+        return next(new ValidationError("Invalid user ID format"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };

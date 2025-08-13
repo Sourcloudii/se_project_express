@@ -1,14 +1,18 @@
 const User = require("../models/user");
-const { NotFoundError } = require("../utils/errors");
+const {
+  NotFoundError,
+  ValidationError,
+  InternalSeverError,
+} = require("../utils/errors");
 
-const getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   console.log("GET all users");
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => next(new InternalSeverError("Internal server error")));
 };
 
-const getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
@@ -22,13 +26,13 @@ const getUserById = (req, res) => {
         return res.status(err.statusCode).send({ message: err.message });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return next(new ValidationError("Invalid user ID format"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };
 
-const createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, avatar } = req.body;
 
   User.create({ name, avatar })
@@ -36,10 +40,8 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return next(new ValidationError("Validaiton failed"));
       }
-      return res.status(500).send({ message: err.message });
+      return next(new InternalSeverError("Internal server error"));
     });
 };
-
-module.exports = { getUsers, getUserById, createUser };
