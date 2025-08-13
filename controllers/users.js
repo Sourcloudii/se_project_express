@@ -9,7 +9,7 @@ module.exports.getUsers = (req, res, next) => {
   console.log("GET all users");
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((err) => next(new InternalSeverError("Internal server error")));
+    .catch(() => next(new InternalSeverError("Internal server error")));
 };
 
 module.exports.getUserById = (req, res, next) => {

@@ -8,7 +8,7 @@ const {
 module.exports.getClothingItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => next(new InternalSeverError("Internal server error")));
+    .catch(() => next(new InternalSeverError("Internal server error")));
 };
 
 module.exports.createClothingItem = (req, res, next) => {
