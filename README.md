@@ -1,5 +1,5 @@
 # WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. For authenticating what a user attempts to send to a database. Using MongoDB, Express, and Mongoose we are able to create data, store data and delete data. 
+The back-end project is focused on creating a server for the WTWR application. For authenticating what a user attempts to send to a database. Using MongoDB, Express, Validator and Mongoose we are able to create data, validate data, store data and delete data. 
 
 
 ## Running the Project
@@ -15,4 +15,4 @@ The back-end project is focused on creating a server for the WTWR application. F
 
 - Mongoose
 
-
+- Validator
