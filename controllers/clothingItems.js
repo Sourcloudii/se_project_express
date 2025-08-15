@@ -1,7 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
-const { NotFoundError } = require("../utils/NotFoundError.js");
-const { ValidationError } = require("../utils/ValidationError.js");
-const { InternalSeverError } = require("../utils/InternalServerError.js");
+const { NotFoundError } = require("../utils/NotFoundError");
+const { ValidationError } = require("../utils/ValidationError");
+const { InternalSeverError } = require("../utils/InternalServerError");
 
 module.exports.getClothingItems = (req, res, next) => {
   ClothingItem.find({})

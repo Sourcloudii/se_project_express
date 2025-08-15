@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
-const { InternalServerError } = require("./utils/InternalServerError.js");
+const { InternalServerError } = require("./utils/InternalServerError");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
   if (!err.statusCode) {
     return next(new InternalServerError("Internal sever error"));
   }
-  res.status(err.statusCode).send({ message: err.message });
+  return res.status(err.statusCode).send({ message: err.message });
 });
 
 app.listen(PORT, () => {

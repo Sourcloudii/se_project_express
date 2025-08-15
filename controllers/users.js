@@ -1,7 +1,7 @@
 const User = require("../models/user");
-const { NotFoundError } = require("../utils/NotFoundError.js");
-const { ValidationError } = require("../utils/ValidationError.js");
-const { InternalSeverError } = require("../utils/InternalServerError.js");
+const { NotFoundError } = require("../utils/NotFoundError");
+const { ValidationError } = require("../utils/ValidationError");
+const { InternalSeverError } = require("../utils/InternalServerError");
 
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
