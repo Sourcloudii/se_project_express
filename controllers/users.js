@@ -1,29 +1,18 @@
 const User = require("../models/user");
-const {
-  NotFoundError,
-  ValidationError,
-  InternalSeverError,
-} = require("../utils/errors");
-
-module.exports.getUsers = (req, res, next) => {
-  console.log("GET all users");
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch(() => next(new InternalSeverError("Internal server error")));
-};
+const { NotFoundError } = require("../utils/NotFoundError.js");
+const { ValidationError } = require("../utils/ValidationError.js");
+const { InternalSeverError } = require("../utils/InternalServerError.js");
 
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .orFail(() => {
-      throw new NotFoundError("Item ID not found");
-    })
-    .then((user) => res.status(200).send(user))
+    .orFail()
+    .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
-      if (err instanceof NotFoundError) {
-        return res.status(err.statusCode).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("Item ID not found"));
       }
       if (err.name === "CastError") {
         return next(new ValidationError("Invalid user ID format"));
@@ -36,7 +25,7 @@ module.exports.createUser = (req, res, next) => {
   const { name, avatar } = req.body;
 
   User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
