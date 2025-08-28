@@ -1,4 +1,4 @@
-const clothingItems = require("../models/clothingItem");
+const clothingItem = require("../models/clothingItem");
 const { NotFoundError } = require("../utils/NotFoundError");
 const { ValidationError } = require("../utils/ValidationError");
 const { InternalServerError } = require("../utils/InternalServerError");
