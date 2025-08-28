@@ -21,12 +21,10 @@ mongoose
 app.use(express.json());
 app.use(cors());
 
-//public routes
 app.post("/signin", login);
 app.post("/signup", createUser);
 app.get("/items", getClothingItems);
 
-//protected routes
 app.use(auth);
 app.use("/", mainRouter);
 
