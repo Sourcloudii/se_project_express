@@ -59,5 +59,5 @@ module.exports.login = (req, res, next) => {
       });
       res.send({ token });
     })
-    .catch(() => next(new ValidationError("Incorrect email or password")));
+    .catch(() => next(new UnauthorizedError("Incorrect email or password")));
 };
