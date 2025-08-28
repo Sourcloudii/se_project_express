@@ -5,7 +5,7 @@ const { InternalServerError } = require("../utils/InternalServerError");
 
 module.exports.updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
-  const  userId  = req.user._id;
+  const userId = req.user._id;
 
   User.findByIdAndUpdate(
     userId,
