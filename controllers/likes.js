@@ -1,7 +1,7 @@
 const clothingItems = require("../models/clothingItem");
 const { NotFoundError } = require("../utils/NotFoundError");
 const { ValidationError } = require("../utils/ValidationError");
-const { InternalSeverError } = require("../utils/InternalServerError");
+const { InternalServerError } = require("../utils/InternalServerError");
 
 module.exports.likeItem = (req, res, next) => {
   clothingItems
@@ -19,7 +19,7 @@ module.exports.likeItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new ValidationError("Invalid user ID format"));
       }
-      return next(new InternalSeverError("Internal server error"));
+      return next(new InternalServerError("Internal server error"));
     });
 };
 
@@ -39,6 +39,6 @@ module.exports.dislikeItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new ValidationError("Invalid user ID format"));
       }
-      return next(new InternalSeverError("Internal server error"));
+      return next(new InternalServerError("Internal server error"));
     });
 };

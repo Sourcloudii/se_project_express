@@ -1,10 +1,15 @@
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
 const { NotFoundError } = require("../utils/NotFoundError");
 const { ValidationError } = require("../utils/ValidationError");
-const { InternalSeverError } = require("../utils/InternalServerError");
+const { InternalServerError } = require("../utils/InternalServerError");
+const { ConflictError } = require("../utils/ConflictError");
+const { UnauthorizedError } = require("../utils/UnauthorizedError");
 
-module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
+module.exports.getCurrentUser = (req, res, next) => {
+  const { userId } = req.user;
 
   User.findById(userId)
     .orFail()
@@ -17,20 +22,46 @@ module.exports.getUserById = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new ValidationError("Invalid user ID format"));
       }
-      return next(new InternalSeverError("Internal server error"));
+      return next(new InternalServerError("Internal server error"));
     });
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => res.send(user))
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => {
+      return User.create({ name, avatar, email, password: hash });
+    })
+    .then((user) => {
+      const userData = user.toObject();
+      delete userData.password;
+      res.status(201).send(userData);
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         return next(new ValidationError("Validaiton failed"));
       }
-      return next(new InternalSeverError("Internal server error"));
+      if (err.code === 11000) {
+        return next(new ConflictError("Email already exists"));
+      }
+      return next(new InternalServerError("Internal server error"));
+    });
+};
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.send({ token });
+    })
+    .catch(() => {
+      return next(new ValidationError("Incorrect email or password"));
     });
 };
