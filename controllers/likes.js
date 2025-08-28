@@ -4,7 +4,7 @@ const { ValidationError } = require("../utils/ValidationError");
 const { InternalServerError } = require("../utils/InternalServerError");
 
 module.exports.likeItem = (req, res, next) => {
-  clothingItems
+  clothingItem
     .findByIdAndUpdate(
       req.params.itemId,
       { $addToSet: { likes: req.user._id } },
@@ -24,7 +24,7 @@ module.exports.likeItem = (req, res, next) => {
 };
 
 module.exports.dislikeItem = (req, res, next) => {
-  clothingItems
+  clothingItem
     .findByIdAndUpdate(
       req.params.itemId,
       { $pull: { likes: req.user._id } },
