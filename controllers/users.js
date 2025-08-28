@@ -31,9 +31,7 @@ module.exports.createUser = (req, res, next) => {
 
   bcrypt
     .hash(password, 10)
-    .then((hash) => {
-      return User.create({ name, avatar, email, password: hash });
-    })
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userData = user.toObject();
       delete userData.password;
@@ -61,7 +59,5 @@ module.exports.login = (req, res, next) => {
       });
       res.send({ token });
     })
-    .catch(() => {
-      return next(new ValidationError("Incorrect email or password"));
-    });
+    .catch(() => next(new ValidationError("Incorrect email or password")));
 };
