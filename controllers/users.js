@@ -1,6 +1,6 @@
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const { NotFoundError } = require("../utils/NotFoundError");
 const { ValidationError } = require("../utils/ValidationError");
