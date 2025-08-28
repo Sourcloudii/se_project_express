@@ -9,7 +9,7 @@ const { ConflictError } = require("../utils/ConflictError");
 const { UnauthorizedError } = require("../utils/UnauthorizedError");
 
 module.exports.getCurrentUser = (req, res, next) => {
-  const { userId } = req.user;
+  const { userId } = req.user._id;
 
   User.findById(userId)
     .orFail()
@@ -17,7 +17,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Item ID not found"));
+        return next(new NotFoundError("User not found"));
       }
       if (err.name === "CastError") {
         return next(new ValidationError("Invalid user ID format"));
