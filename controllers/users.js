@@ -52,7 +52,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || password) {
+  if (!email || !password) {
     return next(new ValidationError("Please provide email and password"));
   }
 
