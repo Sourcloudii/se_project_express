@@ -19,7 +19,7 @@ module.exports.updateUser = (req, res, next) => {
       if (err.name === "DocumentNotFoundError") {
         return next(new NotFoundError("User not found"));
       }
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return next(new ValidationError("Invalid user ID format"));
       }
       return next(new InternalServerError("Internal server error"));
