@@ -9,7 +9,7 @@ const { ConflictError } = require("../utils/ConflictError");
 const { UnauthorizedError } = require("../utils/UnauthorizedError");
 
 module.exports.getCurrentUser = (req, res, next) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
 
   User.findById(userId)
     .orFail()
