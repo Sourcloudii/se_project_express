@@ -10,6 +10,7 @@ const { getClothingItems } = require("./controllers/clothingItems");
 const auth = require("./middlewares/auth");
 const errorHandler = require("./middlewares/errorHandler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { validateUserLogin, validateUserCreation } = require("./middlewares/validation");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -24,18 +25,19 @@ mongoose
 app.use(express.json());
 app.use(cors());
 
-//Remove after testing
+// Remove after testing
 app.get("/crash-test", () => {
   setTimeout(() => {
     throw new Error("Server will crash now");
   }, 0);
 });
 
-app.post("/signin", login);
-app.post("/signup", createUser);
+app.use(requestLogger);
+
+app.post("/signin", validateUserLogin, login);
+app.post("/signup", validateUserCreation, createUser);
 app.get("/items", getClothingItems);
 
-app.use(requestLogger);
 app.use(auth);
 app.use("/", mainRouter);
 
